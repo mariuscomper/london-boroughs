@@ -94,7 +94,6 @@ function addLabels(g) {
 }
 function updateLabels(g, k, px, curSlug, hideAll, dy = 0, hideSlug = null) {
   g.labelG.setAttribute('font-size', (px * k).toFixed(3));
-  g.labelG.setAttribute('transform', `translate(0 ${(dy * k).toFixed(3)})`);
   g.labelG.setAttribute('stroke-width', (px * k * 0.32).toFixed(3));
   tour.forEach((t, i) => {
     const el = g.labels[i];
@@ -104,6 +103,9 @@ function updateLabels(g, k, px, curSlug, hideAll, dy = 0, hideSlug = null) {
     if (el._on !== on) { el.classList.toggle('off', !on); el._on = on; }
     const cur = t.slug === curSlug;
     if (el._cur !== cur) { el.classList.toggle('cur', cur); el._cur = cur; }
+    // below the station dot: push multi-line labels down so their first line clears it
+    const off = dy ? (dy + (el._lines - 1) * 0.58 * px) * k : 0;
+    if (el._off !== off) { el.setAttribute('transform', off ? `translate(0 ${off.toFixed(3)})` : ''); el._off = off; }
   });
 }
 
